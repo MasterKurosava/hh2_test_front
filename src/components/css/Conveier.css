@@ -1,0 +1,21 @@
+.conveyor-texture {
+    background: url("https://t4.ftcdn.net/jpg/01/06/11/19/360_F_106111992_TVBUO9hQD1FmSimQNG9fihxTfURAbEMv.jpg");
+    background-size: cover;
+    width: 200%;
+    height: 200%;
+    position: absolute;
+  }
+  
+  .conveyor-moving {
+    animation: moveTexture 2s linear infinite;
+  }
+  
+  @keyframes moveTexture {
+    from {
+      transform: translateX(0) translateY(0);
+    }
+    to {
+      transform: translateX(-50%) translateY(-50%);
+    }
+  }
+  
