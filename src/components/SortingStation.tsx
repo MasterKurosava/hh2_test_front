@@ -16,7 +16,7 @@ export const SortingStation = () => {
 
   const toggleDevice = useCallback((id: number, name: string) => {
     dispatch({ type: "TOGGLE_DEVICE", id });
-    
+    console.log(`Устройство ${name} переключено`)
     setTimeout(() => {
       dispatch({ type: "COMPLETE_DEVICE", id, name });
     }, 5000);
@@ -24,6 +24,7 @@ export const SortingStation = () => {
 
   const toggleConveyor = useCallback((id: number) => {
     dispatch({ type: "TOGGLE_CONVEYOR", id });
+    console.log(`Конвейер ${id} переключен`)
   }, []);
 
   return (
