@@ -7,6 +7,7 @@ import NotificationList from "./Notification";
 export const SortingStation = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [stationStatus, setStationStatus] = useState("Неактивна");
+  const deviceTimers = new Map<number, NodeJS.Timeout>();
 
   useEffect(() => {
     const isActive = state.devices.some((device: Device) => device.status === "on") ||
@@ -15,12 +16,28 @@ export const SortingStation = () => {
   }, [state.devices, state.conveyors]);
 
   const toggleDevice = useCallback((id: number, name: string) => {
-    dispatch({ type: "TOGGLE_DEVICE", id });
-    console.log(`Устройство ${name} переключено`)
-    setTimeout(() => {
-      dispatch({ type: "COMPLETE_DEVICE", id, name });
-    }, 5000);
-  }, []);
+    const device = state.devices.find((d) => d.id === id);
+    if (!device) return;
+
+    if (device.status === "on") {
+      if (deviceTimers.has(id)) {
+        clearTimeout(deviceTimers.get(id));
+        deviceTimers.delete(id);
+      }
+      dispatch({ type: "TOGGLE_DEVICE", id });
+      console.log(`Устройство ${name} выключено`);
+    } else {
+      dispatch({ type: "TOGGLE_DEVICE", id });
+      console.log(`Устройство ${name} включено`);
+
+      const timer = setTimeout(() => {
+        dispatch({ type: "COMPLETE_DEVICE", id, name });
+        deviceTimers.delete(id);
+      }, 5000);
+
+      deviceTimers.set(id, timer);
+    }
+  }, [state.devices]);
 
   const toggleConveyor = useCallback((id: number) => {
     dispatch({ type: "TOGGLE_CONVEYOR", id });
